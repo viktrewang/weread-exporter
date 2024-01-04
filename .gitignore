@@ -8,3 +8,8 @@ output/
 *.md
 *.log
 *.egg-info/
+books.txt
+.vscode/launch.json
+screenshot.jpg
+test.py
+webpage.html

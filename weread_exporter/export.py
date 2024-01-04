@@ -143,7 +143,7 @@ class WeReadExporter(object):
         return html
 
     async def markdown_to_pdf(
-        self, save_path, extra_css=None, image_format="jpg", dump_html=False
+        self, save_path, extra_css=None, image_format="jpg", dump_html=True
     ):
         meta_data = await self._load_meta_data()
         raw_html = '<img src="cover.jpg" style="width: 100%;">\n'
@@ -153,21 +153,23 @@ class WeReadExporter(object):
         raw_html = raw_html.replace(
             "<pre><code>", "<pre><code>\n"
         )  # Fix unexpected indent
+        if dump_html:
+            html_path = os.path.join(self._save_dir, "output.html")
+            # should write out the file in UTF-8 to support the other encodings 
+            with open(html_path, "w", encoding="UTF-8") as fp:
+                fp.write(raw_html)
         if image_format == "png":
             soup = bs4.BeautifulSoup(raw_html, features="html.parser")
             for img in soup.find_all("img"):
                 src = os.path.join(self._save_dir, img.attrs["src"])
-                if not src.endswith(".png"):
+                # since the utils can only convert jpg to png, here should only check with jpg extension
+                if src.endswith(".jpg"):
                     png_path = src[:-3] + "png"
                     utils.save_to_png(src, png_path)
                     img.attrs["src"] = img.attrs["src"][:-3] + "png"
 
             raw_html = soup.prettify()
 
-        if dump_html:
-            html_path = os.path.join(self._save_dir, "output.html")
-            with open(html_path, "w") as fp:
-                fp.write(raw_html)
         html = HTML(string=raw_html, base_url=self._save_dir)
         css = []
         css_path = os.path.join(current_path, "style.css")

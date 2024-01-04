@@ -230,7 +230,7 @@ class WeReadWebPage(object):
             raise ex
 
     def handle_log(self, message):
-        with open("%s.log" % self._book_id, "a+") as fp:
+        with open("%s.log" % self._book_id, "a+", encoding='utf-8') as fp:
             fp.write("[%s] %s\n" % (self._url, message.text))
 
     async def wait_for_avatar(self, timeout=30):
@@ -354,13 +354,15 @@ class WeReadWebPage(object):
     async def get_markdown(self):
         script = "canvasContextHandler.data.complete;"
         time0 = time.time()
-        while time.time() - time0 < 10:
+        while time.time() - time0 < 60:
             result = await self._page.evaluate(script)
             if result:
                 break
             await asyncio.sleep(1)
         else:
-            raise RuntimeError("Wait for creating markdown timeout")
+            # Try to update markdown anyway
+            pass
+            # raise RuntimeError("Wait for creating markdown timeout")
         script = "canvasContextHandler.data.markdown;"
         result = await self._page.evaluate(script)
         if not result:

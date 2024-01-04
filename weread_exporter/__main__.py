@@ -30,7 +30,7 @@ async def async_main():
         "--load-timeout", help="load chapter page timeout", type=int, default=30,
     )
     parser.add_argument(
-        "--load-interval", help="load chapter page interval time", type=int, default=10,
+        "--load-interval", help="load chapter page interval time", type=int, default=30,
     )
     parser.add_argument(
         "--css-file", help="overide default css style",
