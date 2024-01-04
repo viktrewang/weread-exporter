@@ -100,4 +100,5 @@ def save_to_png(img_path, png_path):
     from PIL import Image
 
     img = Image.open(img_path)
+    img = img.convert('RGB')
     img.save(png_path)

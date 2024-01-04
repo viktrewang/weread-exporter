@@ -216,7 +216,7 @@ class WeReadWebPage(object):
         except pyppeteer.errors.TimeoutError as ex:
             html = await self.get_html()
             html_path = "webpage.html"
-            with open(html_path, "w") as fp:
+            with open(html_path, "w", encoding="UTF-8") as fp:
                 fp.write(html)
             logging.info(
                 "[%s] Current html saved to %s" % (self.__class__.__name__, html_path)
@@ -398,6 +398,7 @@ class WeReadWebPage(object):
                 raise NotImplementedError(result)
 
     def _get_chapter_url(self, chapter_id):
+        print(f"_get_chapter_url{chapter_id}")
         return "%s%sk%s" % (
             self._chapter_root_url,
             self._book_id,
